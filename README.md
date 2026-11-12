@@ -15,14 +15,14 @@ This package contains the current SELECTOR HUB storefront plus Netlify serverles
 1. Sign in to GitHub and create a **New repository** named `selector-hub-store`.
 2. Choose **Private** if you want the source code private. This does not make your Netlify website private; hosting visibility is a separate setting.
 3. On the new repository page, choose **uploading an existing file**.
-4. Extract this ZIP on your computer. Open the extracted folder and upload its contents (the `index.html`, `netlify` folder, `netlify.toml`, `package.json`, README, and `.env.example`). Upload the contents, not the outer folder itself.
+4. Extract this ZIP on your computer. Open the extracted folder and upload its contents (the `public` folder containing `index.html`, `netlify` folder, `netlify.toml`, `package.json`, README, and `.env.example`). Upload the contents, not the outer folder itself.
 5. Commit the files to the repository.
 
 ## 2. Connect GitHub to Netlify
 1. In Netlify, open the existing SELECTOR HUB site.
 2. Find **Project configuration → Build & deploy → Continuous deployment** (wording can vary).
 3. Choose **Link repository** / **Connect to Git provider**, select GitHub, then choose `selector-hub-store`.
-4. Build settings: build command can be left blank; publish directory is `.`. The included `netlify.toml` defines the functions directory.
+4. Build settings: leave the build command blank and set the publish directory to `public`. The included `netlify.toml` defines the publish and functions directories. The static storefront is served directly from `public/index.html`; no build step is required.
 5. Deploy. Netlify should deploy the site and its functions from the repository.
 
 ## 3. Add PayPal Sandbox environment variables in Netlify
