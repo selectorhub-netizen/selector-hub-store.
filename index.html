@@ -37,8 +37,8 @@ footer{padding:48px 0 28px;background:#070707}.footer-main{display:flex;justify-
 <section class="store-section" id="store"><div class="wrap"><div class="section-top"><div><span class="eyebrow">THE SELECTOR HUB STORE</span><h2>Shop digital releases</h2><p>Browse the collection and find the right sound for your next set.</p></div><span class="result-count" id="resultCount">19 RELEASES</span></div><div class="store-tools"><input class="search" id="search" type="search" placeholder="Search edits, remixes, crates…" aria-label="Search products"><div class="filters" id="filters"><button class="filter active" data-filter="all">All releases</button><button class="filter" data-filter="remixes">Edits & remixes</button><button class="filter" data-filter="vault">DJ vault</button><button class="filter" data-filter="tools">DJ tools</button><button class="filter" data-filter="pool">Selector pool</button></div></div><div class="product-grid" id="productGrid"></div></div></section>
 <section class="member-band" id="vault"><div class="wrap member-inner"><div><span class="eyebrow">MORE IN THE CRATE</span><h2>THE SELECTOR VAULT</h2><p>A growing collection of DJ edits, juggling packs, tools and exclusive releases. Build your library with sounds selected for the dance.</p><p class="member-note">Customer accounts and exclusive member access will be added with the secure store backend.</p></div><a class="btn" href="#store" data-jump-filter="vault">Explore the vault</a></div></section>
 <footer id="contact"><div class="wrap"><div class="footer-main"><div><div class="footer-brand">SELECTOR <b>HUB</b> — FOR THE CULTURE</div><p>DJ edits, remix packs, juggling selections and tools for selectors. Independent digital store.</p></div><div class="footer-links"><a href="#home">Home</a><a href="#store">Store</a><a href="#vault">DJ Vault</a><a href="#contact">Contact</a></div></div><div class="copyright"><span>© <span id="year"></span> SELECTOR HUB. All rights reserved.</span><span>USD pricing · Independent digital store</span></div></div></footer>
-<div class="overlay" id="cartOverlay" aria-hidden="true"><aside class="drawer" role="dialog" aria-modal="true" aria-label="Shopping cart"><div class="drawer-head"><div><span class="eyebrow">YOUR SELECTION</span><h2>Shopping cart</h2></div><button class="close" id="closeCart">CLOSE ✕</button></div><div id="cartItems"></div><div class="total"><span>Subtotal</span><span id="cartTotal">$0.00</span></div><div id="paypal-button-container" class="paypal-buttons"></div><p id="paypal-status" class="paypal-status" role="status" aria-live="polite"></p><p class="drawer-note">Payments are processed securely by PayPal. Digital download delivery is not yet automated; your download fulfillment process must be connected separately.</p></aside></div><div class="toast" id="toast">ADDED TO YOUR CART</div>
-<script>
+<div class="overlay" id="cartOverlay" aria-hidden="true"><aside class="drawer" role="dialog" aria-modal="true" aria-label="Shopping cart"><div class="drawer-head"><div><span class="eyebrow">YOUR SELECTION</span><h2>Shopping cart</h2></div><button class="close" id="closeCart">CLOSE ✕</button></div><div id="cartItems"></div><div class="total"><span>Subtotal</span><span id="cartTotal">$0.00</span></div><div id="paypal-button-container" class="paypal-buttons"></div><p id="paypal-status" class="paypal-status" role="status" aria-live="polite"></p><p class="drawer-note">Payments are processed securely by PayPal. Digital download delivery is not yet automated; your download fulfillment process must be connected separately.</p></aside></div><div class="toast" id="toast">ADDED TO YOUR CART</div> 
+  <script>
 const products=[
 {name:'NICCOMATIC 2026 REMIX PACK #1',price:130,category:'remixes'},
 {name:'NICCOMATIC 2025-2026 REMIXX PACK #1',price:25,category:'remixes'},
@@ -60,92 +60,200 @@ const products=[
 {name:'NICCOMATIC SWEET LOADINGZ HOLD ON TO WHAT YOU GOT',price:80,category:'pool'},
 {name:'NICCOMATIC SOULZ/LOVERZ ROCK MIX JUGGLING',price:80,category:'pool'}
 ];
-const labels={remixes:'EDITS & REMIXES',vault:'DJ VAULT',tools:'DJ TOOLS & FX',pool:'SELECTOR POOL'};let active='all',cart=JSON.parse(localStorage.getItem('sh-cart-v2')||'[]');const money=n=>'$'+Number(n).toFixed(2);
-function renderProducts(){const q=document.getElementById('search').value.toLowerCase();const list=products.map((p,i)=>({...p,id:i})).filter(p=>(active==='all'||p.category===active)&&p.name.toLowerCase().includes(q));document.getElementById('resultCount').textContent=String(list.length).padStart(2,'0')+' RELEASES';document.getElementById('productGrid').innerHTML=list.length?list.map(p=>`<article class="product-card"><div><span class="product-type">SELECTOR HUB / ${labels[p.category]}</span><h3>${p.name}</h3></div><div class="product-bottom"><span class="price">${p.label||money(p.price)}</span><button class="add" data-add="${p.id}">ADD TO CART +</button></div></article>`).join(''):'<div class="empty">No products match your search.</div>';document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>addToCart(Number(b.dataset.add)));}
-function addToCart(id){const f=cart.find(x=>x.id===id);if(f)f.qty++;else cart.push({id,qty:1});saveCart();const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1300)}function saveCart(){localStorage.setItem('sh-cart-v2',JSON.stringify(cart));document.getElementById('cartCount').textContent=cart.reduce((s,x)=>s+x.qty,0);renderCart()}
-function renderCart(){const el=document.getElementById('cartItems');if(!cart.length){el.innerHTML='<div class="empty">Your cart is empty. Add a release to get started.</div>';document.getElementById('cartTotal').textContent='$0.00';return}el.innerHTML=cart.map(x=>{const p=products[x.id];return `<div class="cart-row"><div><strong>${p.name}</strong><small>${money(p.price)} × ${x.qty}</small></div><div style="text-align:right"><strong>${money(p.price*x.qty)}</strong><button class="remove" data-remove="${x.id}">REMOVE</button></div></div>`}).join('');document.getElementById('cartTotal').textContent=money(cart.reduce((s,x)=>s+products[x.id].price*x.qty,0));document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{cart=cart.filter(x=>x.id!==Number(b.dataset.remove));saveCart()})}
-document.getElementById('search').addEventListener('input',renderProducts);document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>setFilter(b.dataset.filter));function setFilter(f){active=f;document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('active',x.dataset.filter===active));renderProducts()};document.querySelectorAll('[data-jump-filter]').forEach(a=>a.onclick=()=>setFilter(a.dataset.jumpFilter));
-const overlay=document.getElementById('cartOverlay');document.getElementById('openCart').onclick=()=>{overlay.classList.add('open');overlay.setAttribute('aria-hidden','false')};document.getElementById('closeCart').onclick=()=>{overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true')};overlay.addEventListener('click',e=>{if(e.target===overlay)document.getElementById('closeCart').click()});document.getElementById('menuToggle').onclick=()=>{const nav=document.querySelector('.nav');const open=nav.style.display==='flex';nav.style.display=open?'none':'flex';nav.style.position=open?'':'absolute';nav.style.top=open?'':'68px';nav.style.left=open?'':'0';nav.style.right=open?'':'0';nav.style.padding=open?'':'20px 22px';nav.style.background=open?'':'#090909';nav.style.flexDirection=open?'':'column';nav.style.alignItems=open?'':'flex-start';nav.style.borderBottom=open?'':'1px solid #333'};document.getElementById('year').textContent=new Date().getFullYear();renderProducts();saveCart();
 
-// PayPal Checkout — the Client ID is public; never place the Secret in this file.
-const PAYPAL_CLIENT_ID = 'PASTE_YOUR_PAYPAL_LIVE_CLIENT_ID_HERE';
-const paypalStatus = document.getElementById('paypal-status');
-const paypalContainer = document.getElementById('paypal-button-container');
+const labels={remixes:'EDITS & REMIXES',vault:'DJ VAULT',tools:'DJ TOOLS & FX',pool:'SELECTOR POOL'};
+let active='all',cart=JSON.parse(localStorage.getItem('sh-cart-v2')||'[]');
+const money=n=>'$'+Number(n).toFixed(2);
 
-function showPayPalStatus(message) {
-  paypalStatus.textContent = message;
+function renderProducts(){
+const q=document.getElementById('search').value.toLowerCase();
+const list=products.map((p,i)=>({...p,id:i})).filter(p=>(active==='all'||p.category===active)&&p.name.toLowerCase().includes(q));
+document.getElementById('resultCount').textContent=String(list.length).padStart(2,'0')+' RELEASES';
+document.getElementById('productGrid').innerHTML=list.length?list.map(p=>`<article class="product-card"><div><span class="product-type">SELECTOR HUB / ${labels[p.category]}</span><h3>${p.name}</h3></div><div class="product-bottom"><span class="price">${p.label||money(p.price)}</span><button class="add" data-add="${p.id}">ADD TO CART +</button></div></article>`).join(''):'<div class="empty">No products match your search.</div>';
+document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>addToCart(Number(b.dataset.add)));
 }
 
-function loadPayPalButtons() {
-  if (!PAYPAL_CLIENT_ID || PAYPAL_CLIENT_ID.includes('PASTE_YOUR')) {
-    showPayPalStatus('Add your PayPal Live Client ID to activate checkout.');
-    return;
-  }
-
-  const sdk = document.createElement('script');
-  sdk.src = 'https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(PAYPAL_CLIENT_ID) + '&currency=USD&intent=capture&components=buttons&enable-funding=card';
-  sdk.onload = () => {
-    if (!window.paypal) {
-      showPayPalStatus('PayPal could not load. Please refresh and try again.');
-      return;
-    }
-
-    window.paypal.Buttons({
-      style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
-
-      createOrder: async () => {
-        if (!cart.length) throw new Error('Your cart is empty.');
-        showPayPalStatus('Creating your secure PayPal order...');
-
-        const response = await fetch('/.netlify/functions/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'create',
-            items: cart.map(item => ({ id: item.id, qty: item.qty }))
-          })
-        });
-
-        const result = await response.json();
-        if (!response.ok || !result.orderID) {
-          throw new Error(result.error || 'Could not create your PayPal order.');
-        }
-        showPayPalStatus('Order created. Continue with PayPal.');
-        return result.orderID;
-      },
-
-      onApprove: async (data) => {
-        showPayPalStatus('Payment approved. Completing your payment...');
-
-        const response = await fetch('/.netlify/functions/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'capture', orderID: data.orderID })
-        });
-
-        const result = await response.json();
-        if (!response.ok || result.status !== 'COMPLETED') {
-          throw new Error(result.error || 'Payment could not be completed.');
-        }
-
-        cart = [];
-        saveCart();
-        showPayPalStatus('Payment successful. Thank you for shopping with SELECTOR HUB!');
-      },
-
-      onCancel: () => showPayPalStatus('Payment was cancelled. Your cart is still saved.'),
-      onError: (error) => {
-        console.error('PayPal checkout error:', error);
-        showPayPalStatus(error.message || 'PayPal checkout encountered an error. Please try again.');
-      }
-    }).render('#paypal-button-container').catch(error => {
-      console.error('PayPal button rendering error:', error);
-      showPayPalStatus('PayPal buttons could not be displayed. Check your Client ID and deployment.');
-    });
-  };
-  sdk.onerror = () => showPayPalStatus('Could not load PayPal. Check your internet connection and Client ID.');
-  document.head.appendChild(sdk);
+function addToCart(id){
+const f=cart.find(x=>x.id===id);
+if(f)f.qty++;
+else cart.push({id,qty:1});
+saveCart();
+const t=document.getElementById('toast');
+t.classList.add('show');
+setTimeout(()=>t.classList.remove('show'),1300);
 }
 
-loadPayPalButtons();
-</script></body></html>
+function saveCart(){
+localStorage.setItem('sh-cart-v2',JSON.stringify(cart));
+document.getElementById('cartCount').textContent=cart.reduce((s,x)=>s+x.qty,0);
+renderCart();
+}
+
+function renderCart(){
+const el=document.getElementById('cartItems');
+if(!cart.length){
+el.innerHTML='<div class="empty">Your cart is empty. Add a release to get started.</div>';
+document.getElementById('cartTotal').textContent='$0.00';
+return;
+}
+el.innerHTML=cart.map(x=>{
+const p=products[x.id];
+return `<div class="cart-row"><div><strong>${p.name}</strong><small>${money(p.price)} × ${x.qty}</small></div><div style="text-align:right"><strong>${money(p.price*x.qty)}</strong><button class="remove" data-remove="${x.id}">REMOVE</button></div></div>`;
+}).join('');
+document.getElementById('cartTotal').textContent=money(cart.reduce((s,x)=>s+products[x.id].price*x.qty,0));
+document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{
+cart=cart.filter(x=>x.id!==Number(b.dataset.remove));
+saveCart();
+});
+}
+
+document.getElementById('search').addEventListener('input',renderProducts);
+document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>setFilter(b.dataset.filter));
+
+function setFilter(f){
+active=f;
+document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('active',x.dataset.filter===active));
+renderProducts();
+}
+
+document.querySelectorAll('[data-jump-filter]').forEach(a=>a.onclick=()=>setFilter(a.dataset.jumpFilter));
+
+const overlay=document.getElementById('cartOverlay');
+document.getElementById('openCart').onclick=()=>{
+overlay.classList.add('open');
+overlay.setAttribute('aria-hidden','false');
+};
+document.getElementById('closeCart').onclick=()=>{
+overlay.classList.remove('open');
+overlay.setAttribute('aria-hidden','true');
+};
+overlay.addEventListener('click',e=>{
+if(e.target===overlay)document.getElementById('closeCart').click();
+});
+
+document.getElementById('menuToggle').onclick=()=>{
+const nav=document.querySelector('.nav');
+const open=nav.style.display==='flex';
+nav.style.display=open?'none':'flex';
+nav.style.position=open?'':'absolute';
+nav.style.top=open?'':'68px';
+nav.style.left=open?'':'0';
+nav.style.right=open?'':'0';
+nav.style.padding=open?'':'20px 22px';
+nav.style.background=open?'':'#090909';
+nav.style.flexDirection=open?'':'column';
+nav.style.alignItems=open?'':'flex-start';
+nav.style.borderBottom=open?'':'1px solid #333';
+};
+
+document.getElementById('year').textContent=new Date().getFullYear();
+renderProducts();
+saveCart();
+    // PAYPAL CHECKOUT
+// Replace the placeholder below with your PayPal LIVE Client ID.
+// NEVER put your PayPal Secret in this file.
+const PAYPAL_CLIENT_ID='PASTE_YOUR_PAYPAL_LIVE_CLIENT_ID_HERE';
+
+function paypalMessage(message){
+document.getElementById('paypal-status').textContent=message;
+}
+
+function loadPayPal(){
+if(!PAYPAL_CLIENT_ID||PAYPAL_CLIENT_ID===EHIpZJ94qJgx5sPZY84Zw69XSC0IddT0HGVv6LNG4GG8jxC72lyPjnZxCUev1mkSYWnX6jmIj-tbxoPu){
+paypalMessage('PayPal setup is not finished. Add your PayPal Live Client ID.');
+return;
+}
+
+const sdk=document.createElement('script');
+sdk.src='https://www.paypal.com/sdk/js?client-id='+encodeURIComponent(PAYPAL_CLIENT_ID)+'&currency=USD&intent=capture&components=buttons&enable-funding=card';
+
+sdk.onload=()=>{
+if(!window.paypal){
+paypalMessage('PayPal could not load. Please refresh and try again.');
+return;
+}
+
+paypal.Buttons({
+style:{
+layout:'vertical',
+color:'gold',
+shape:'rect',
+label:'paypal'
+},
+
+createOrder:async()=>{
+if(!cart.length)throw new Error('Your cart is empty.');
+
+paypalMessage('Preparing your secure checkout...');
+
+const response=await fetch('/.netlify/functions/create-order',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+action:'create',
+items:cart.map(item=>({
+id:item.id,
+qty:item.qty
+}))
+})
+});
+
+const data=await response.json();
+
+if(!response.ok||!data.orderID){
+throw new Error(data.error||'Unable to create your PayPal order.');
+}
+
+return data.orderID;
+},
+
+onApprove:async(data)=>{
+paypalMessage('Payment is being processed...');
+
+const response=await fetch('/.netlify/functions/create-order',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+action:'capture',
+orderID:data.orderID
+})
+});
+
+const result=await response.json();
+
+if(!response.ok||result.status!=='COMPLETED'){
+throw new Error(result.error||'Payment could not be confirmed.');
+}
+
+cart=[];
+saveCart();
+paypalMessage('Payment successful! Thank you for shopping with SELECTOR HUB.');
+},
+
+onCancel:()=>{
+paypalMessage('Checkout was cancelled. Your cart is still saved.');
+},
+
+onError:(error)=>{
+console.error('PayPal checkout error:',error);
+paypalMessage('There was a checkout problem. Please try again.');
+}
+
+}).render('#paypal-button-container')
+.catch(error=>{
+console.error(error);
+paypalMessage('PayPal buttons could not be displayed.');
+});
+};
+
+sdk.onerror=()=>{
+paypalMessage('Unable to connect to PayPal. Please refresh and try again.');
+};
+
+document.head.appendChild(sdk);
+}
+
+loadPayPal();
+</script>
+</body>
+</html>
