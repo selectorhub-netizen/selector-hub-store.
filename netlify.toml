@@ -1,5 +1,5 @@
 [build]
-  publish = "."
+  publish = "/opt/build/repo"
   functions = "netlify/functions"
 
 [functions]
