@@ -22,7 +22,7 @@ This package contains the current SELECTOR HUB storefront plus Netlify serverles
 1. In Netlify, open the existing SELECTOR HUB site.
 2. Find **Project configuration → Build & deploy → Continuous deployment** (wording can vary).
 3. Choose **Link repository** / **Connect to Git provider**, select GitHub, then choose `selector-hub-store`.
-4. Build settings: build command can be left blank; publish directory is `.`. The included `netlify.toml` defines the functions directory.
+4. The included `netlify.toml` sets the build command to `node scripts/prepare-site.mjs`, the publish directory to `dist`, and the functions directory to `netlify/functions`. The build step creates `dist` and copies the storefront into it; backend source files stay outside the published directory.
 5. Deploy. Netlify should deploy the site and its functions from the repository.
 
 ## 3. Add PayPal Sandbox environment variables in Netlify
