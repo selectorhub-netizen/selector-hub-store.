@@ -1,0 +1,7 @@
+{
+  "name": "selector-hub-store",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SELECTOR HUB storefront with secure PayPal sandbox checkout functions",
+  "engines": { "node": ">=18" }
+}
